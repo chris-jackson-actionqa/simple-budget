@@ -1,5 +1,13 @@
 # Routes and DB notes
 
+## Users
+
+### users routes
+
+### users table
+
+- userid PRIMARY KEY
+
 ## Expenses
 
 ### expenses routes
@@ -14,6 +22,7 @@
 
 - expenseid SERIAL PRIMARY KEY
 - userid FOREIGN KEY
+  - **TODO**: maybe not use userid. Maybe an accountid instead. A user can have multiple accounts they are budgeting for? Or am I overdesigning?
 - name VARCHAR(50)
 - recurrance VARCHAR(1)
   - ["O", "D", "W", "M", "Y"]
@@ -31,11 +40,13 @@
 
 ## Balance
 
+### balance routes
+
 - GET /balance
 - PUT /balance
 - DELETE /balance
 
-### A balance
+### balance table
 
 - amount
 
