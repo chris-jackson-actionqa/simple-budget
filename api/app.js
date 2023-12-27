@@ -1,18 +1,14 @@
 const express = require("express");
 const bodyParser = require("body-parser");
-const pgp = require("pg-promise")();
-const { PORT, VERSION, CONNECTION_STRING } = require("./utils/constants");
-const userRoutes = require("./routes/users");
+const { PORT, VERSION } = require("./utils/constants");
+const userRoutes = require("./routes/v0/users");
+const { getDb } = require("./utils/db");
 
 const app = express();
-const db = pgp(CONNECTION_STRING);
+const db = getDb();
 
 app.use(bodyParser.json());
-app.use("/users", userRoutes);
-
-app.get("/", (req, res) => {
-  res.send("Hello World!");
-});
+app.use(`/${VERSION}/users`, userRoutes);
 
 app.post(`/${VERSION}/accounts/add-account`, async (req, res) => {
   const accountId = await db.one(
@@ -47,6 +43,4 @@ app.post(`/${VERSION}/expenses/add-expense`, (req, res) => {
   });
 });
 
-app.listen(PORT, () => {
-  console.log("Server running on port " + PORT);
-});
+module.exports = { app };
