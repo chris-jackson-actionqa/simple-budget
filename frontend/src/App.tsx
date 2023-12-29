@@ -1,17 +1,16 @@
-import { useState } from "react";
-import AddBillForm from "./components/bills/AddBillForm";
-import BillsList from "./components/bills/BillsList";
+import { Routes, Route } from "react-router-dom";
+import HomePage from "./pages/HomePage";
+import BillsPage from "./pages/BillsPage";
+import Header from "./components/Header";
 
 function App() {
-  const [bills, setBills] = useState([]);
   return (
     <>
-      <header>
-        <h1>Simple Budget</h1>
-      </header>
-
-      <AddBillForm bills={bills} setBills={setBills} />
-      <BillsList bills={bills} />
+      <Header />
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="bills" element={<BillsPage />} />
+      </Routes>
     </>
   );
 }
