@@ -17,18 +17,18 @@ const Header = () => {
 
   return (
     <Navbar expand>
-      <NavbarBrand href="/">
-        <Link to="/">
-          <img
-            alt="Simple Budget logo"
-            src={SimpleBudgetLogo}
-            style={{
-              height: 160,
-            }}
-            className="float-start"
-          />
-        </Link>
-      </NavbarBrand>
+      {/* <NavbarBrand> */}
+      <Link to="/" className="navbar-brand">
+        <img
+          alt="Simple Budget logo"
+          src={SimpleBudgetLogo}
+          style={{
+            height: 160,
+          }}
+          className="float-start"
+        />
+      </Link>
+      {/* </NavbarBrand> */}
       {/* <NavbarToggler onClick={toggle} /> */}
       {/* <Collapse isOpen={isOpen} navbar> */}
       <Nav className="me-auto" navbar>

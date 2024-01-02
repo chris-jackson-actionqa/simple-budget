@@ -5,6 +5,7 @@ import Header from "./components/Header";
 import { useState } from "react";
 import TESTBILLS from "./assets/testData/TESTBILLS";
 import BillPage from "./pages/BillPage";
+import EditBillPage from "./pages/EditBillPage";
 
 function App() {
   const [bills, setBills] = useState(TESTBILLS);
@@ -20,6 +21,10 @@ function App() {
         <Route
           path="/bills/:billId"
           element={<BillPage bills={bills} setBills={setBills} />}
+        />
+        <Route
+          path="/bills/:billId/edit"
+          element={<EditBillPage bills={bills} setBills={setBills} />}
         />
       </Routes>
     </>
