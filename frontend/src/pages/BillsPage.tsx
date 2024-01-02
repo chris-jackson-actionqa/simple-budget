@@ -5,7 +5,7 @@ const BillsPage = ({ bills, setBills }) => {
   return (
     <>
       <AddBillForm bills={bills} setBills={setBills} />
-      <BillsList bills={bills} />
+      <BillsList bills={bills} setBills={setBills} />
     </>
   );
 };

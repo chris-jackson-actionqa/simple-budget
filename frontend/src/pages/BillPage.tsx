@@ -1,11 +1,28 @@
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { Col, Container, Row, Button } from "reactstrap";
 
-const BillPage = ({ bills }) => {
+const BillPage = ({ bills, setBills }) => {
+  const navigate = useNavigate();
   const { billId } = useParams();
   if (!billId) return <div>Bill not found</div>;
   const theBill = bills.find((bill) => bill.id === parseInt(billId));
   if (!theBill) return <div>Bill not found</div>;
+
+  const deleteBill = () => {
+    const updatedBills = bills.filter((bill) => bill.id !== parseInt(billId));
+    setBills(updatedBills);
+  };
+
+  const handleDeleteBill = () => {
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this bill?"
+    );
+    if (confirmDelete) {
+      deleteBill();
+      navigate("/bills");
+    }
+  };
+
   return (
     <Container className="text-center">
       <h1>{theBill.name}</h1>
@@ -30,7 +47,9 @@ const BillPage = ({ bills }) => {
           <Button color="primary">Edit</Button>
         </Col>
         <Col className="text-start">
-          <Button color="danger">Delete</Button>
+          <Button color="danger" onClick={handleDeleteBill}>
+            Delete
+          </Button>
         </Col>
       </Row>
     </Container>

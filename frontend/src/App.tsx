@@ -17,7 +17,10 @@ function App() {
           path="bills"
           element={<BillsPage bills={bills} setBills={setBills} />}
         />
-        <Route path="/bills/:billId" element={<BillPage bills={bills} />} />
+        <Route
+          path="/bills/:billId"
+          element={<BillPage bills={bills} setBills={setBills} />}
+        />
       </Routes>
     </>
   );
