@@ -1,7 +1,7 @@
 import { Container, Row, Col } from "reactstrap";
 import Bill from "./Bill";
 
-const BillsList = ({ bills }) => {
+const BillsList = ({ bills, setBills }) => {
   return (
     <Container className="mt-5">
       <h2>Bills</h2>
@@ -11,7 +11,7 @@ const BillsList = ({ bills }) => {
         <Col className="border">Day of Month</Col>
       </Row>
       {bills.map((bill) => (
-        <Bill key={bill.id} bill={bill} />
+        <Bill key={bill.id} bill={bill} setBills={setBills} />
       ))}
     </Container>
   );

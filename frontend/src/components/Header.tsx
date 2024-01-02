@@ -6,7 +6,7 @@ import {
   NavbarToggler,
   NavItem,
 } from "reactstrap";
-import { NavLink } from "react-router-dom";
+import { NavLink, Link } from "react-router-dom";
 import { useState } from "react";
 import SimpleBudgetLogo from "../assets/logos/sb-logos-black.png";
 
@@ -18,14 +18,16 @@ const Header = () => {
   return (
     <Navbar expand>
       <NavbarBrand href="/">
-        <img
-          alt="Simple Budget logo"
-          src={SimpleBudgetLogo}
-          style={{
-            height: 160,
-          }}
-          className="float-start"
-        />
+        <Link to="/">
+          <img
+            alt="Simple Budget logo"
+            src={SimpleBudgetLogo}
+            style={{
+              height: 160,
+            }}
+            className="float-start"
+          />
+        </Link>
       </NavbarBrand>
       {/* <NavbarToggler onClick={toggle} /> */}
       {/* <Collapse isOpen={isOpen} navbar> */}
