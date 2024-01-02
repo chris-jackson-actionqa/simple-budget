@@ -23,6 +23,10 @@ const BillPage = ({ bills, setBills }) => {
     }
   };
 
+  const handleEditBill = () => {
+    navigate(`/bills/${billId}/edit`);
+  };
+
   return (
     <Container className="text-center">
       <h1>{theBill.name}</h1>
@@ -44,7 +48,9 @@ const BillPage = ({ bills, setBills }) => {
       </Row>
       <Row>
         <Col className="text-end">
-          <Button color="primary">Edit</Button>
+          <Button color="primary" onClick={handleEditBill}>
+            Edit
+          </Button>
         </Col>
         <Col className="text-start">
           <Button color="danger" onClick={handleDeleteBill}>
