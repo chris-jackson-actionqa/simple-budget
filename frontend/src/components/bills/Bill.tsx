@@ -4,7 +4,7 @@ import { Row, Col } from "reactstrap";
 const Bill = ({ bill }) => (
   <Row key={bill.id} className="border border-black">
     <Col className="border">
-      <Link to={`/bills/${bill.id}`}>{bill.name}</Link>
+      <Link to={`/bills/${bill.id}/edit`}>{bill.name}</Link>
     </Col>
     <Col className="border">${bill.amount}</Col>
     <Col className="border">{bill.date}</Col>
