@@ -1,11 +1,12 @@
 import { Container, Form, FormGroup, Label, Input, Button } from "reactstrap";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const EditBill = ({ bills, setBills, billId }) => {
   const navigate = useNavigate();
   const foundBill = bills.find((bill) => bill.id === parseInt(billId));
   const [theBill, setBill] = useState({ ...foundBill });
+  const [doneEditing, setDoneEditing] = useState(false);
 
   const handleEditBill = (event) => {
     event.preventDefault();
@@ -19,8 +20,29 @@ const EditBill = ({ bills, setBills, billId }) => {
       bill.id === parseInt(billId) ? updatedBill : bill
     );
     setBills(updatedBills);
-    navigate(`/bills/${billId}`);
+    setDoneEditing(true);
   };
+
+  const deleteBill = () => {
+    const updatedBills = bills.filter((bill) => bill.id !== parseInt(billId));
+    setBills(updatedBills);
+  };
+
+  const handleDeleteBill = () => {
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this bill?"
+    );
+    if (confirmDelete) {
+      deleteBill();
+      setDoneEditing(true);
+    }
+  };
+
+  useEffect(() => {
+    if (doneEditing) {
+      navigate("/bills");
+    }
+  }, [doneEditing]);
 
   return (
     <Container className="">
@@ -66,10 +88,13 @@ const EditBill = ({ bills, setBills, billId }) => {
             }
           />
         </FormGroup>
-        <Button color="secondary" onClick={() => navigate(`/bills/${billId}`)}>
+        <Button color="secondary" onClick={() => setDoneEditing(true)}>
           Cancel
         </Button>
         <Button color="primary">Save</Button>
+        <Button color="danger" onClick={handleDeleteBill}>
+          Delete
+        </Button>
       </Form>
     </Container>
   );
