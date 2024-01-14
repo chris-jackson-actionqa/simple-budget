@@ -1,10 +1,17 @@
 import { Container, Form, FormGroup, Label, Input, Button } from "reactstrap";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import {
+  selectBillById,
+  removeBill,
+  updateBill,
+} from "../../features/bills/billsSlice";
 
-const EditBill = ({ bills, setBills, billId }) => {
+const EditBill = ({ billId }: { billId: string }) => {
   const navigate = useNavigate();
-  const foundBill = bills.find((bill) => bill.id === parseInt(billId));
+  const dispatch = useDispatch();
+  const foundBill = useSelector(selectBillById(parseInt(billId)));
   const [theBill, setBill] = useState({ ...foundBill });
   const [doneEditing, setDoneEditing] = useState(false);
 
@@ -16,16 +23,12 @@ const EditBill = ({ bills, setBills, billId }) => {
       amount: theBill.amount,
       date: theBill.date,
     };
-    const updatedBills = bills.map((bill) =>
-      bill.id === parseInt(billId) ? updatedBill : bill
-    );
-    setBills(updatedBills);
+    dispatch(updateBill(updatedBill));
     setDoneEditing(true);
   };
 
   const deleteBill = () => {
-    const updatedBills = bills.filter((bill) => bill.id !== parseInt(billId));
-    setBills(updatedBills);
+    dispatch(removeBill(parseInt(billId)));
   };
 
   const handleDeleteBill = () => {

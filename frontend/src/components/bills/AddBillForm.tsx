@@ -1,17 +1,18 @@
 import { Container, Form, FormGroup, Label, Input, Button } from "reactstrap";
+import { useDispatch } from "react-redux";
+import { addBill } from "../../features/bills/billsSlice";
 
-const AddBillForm = (props) => {
-  const { bills, setBills } = props;
+const AddBillForm = () => {
+  const dispatch = useDispatch();
 
   function handleAddBill(event) {
     event.preventDefault();
     const newBill = {
-      id: bills.length + 1,
       name: event.target.billName.value,
       amount: event.target.billAmount.value,
       date: event.target.billDate.value,
     };
-    setBills([...bills, newBill]);
+    dispatch(addBill(newBill));
     event.target.reset();
   }
 
