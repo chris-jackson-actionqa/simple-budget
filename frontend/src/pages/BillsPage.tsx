@@ -1,11 +1,11 @@
 import AddBillForm from "../components/bills/AddBillForm";
 import BillsList from "../components/bills/BillsList";
 
-const BillsPage = ({ bills, setBills }) => {
+const BillsPage = () => {
   return (
     <>
-      <AddBillForm bills={bills} setBills={setBills} />
-      <BillsList bills={bills} setBills={setBills} />
+      <AddBillForm />
+      <BillsList />
     </>
   );
 };

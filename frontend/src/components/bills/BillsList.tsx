@@ -1,7 +1,11 @@
 import { Container, Row, Col } from "reactstrap";
 import Bill from "./Bill";
+import { Bill as BillType } from "../../common/types";
+import { useSelector } from "react-redux";
+import { selectBills } from "../../features/bills/billsSlice";
 
-const BillsList = ({ bills, setBills }) => {
+const BillsList = () => {
+  const bills: Array<BillType> = useSelector(selectBills);
   return (
     <Container className="mt-5">
       <h2>Bills</h2>
@@ -10,8 +14,8 @@ const BillsList = ({ bills, setBills }) => {
         <Col className="border">Amount</Col>
         <Col className="border">Day of Month</Col>
       </Row>
-      {bills.map((bill) => (
-        <Bill key={bill.id} bill={bill} setBills={setBills} />
+      {bills.map((bill: BillType) => (
+        <Bill key={`${bill.id}`} billId={`${bill.id}`} />
       ))}
     </Container>
   );
