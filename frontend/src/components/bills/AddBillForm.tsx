@@ -1,43 +1,71 @@
-import { Container, Form, FormGroup, Label, Input, Button } from "reactstrap";
+import { Formik, Form, Field, ErrorMessage } from "formik";
+import { Container, FormGroup, Label, Input, Button } from "reactstrap";
 import { useDispatch } from "react-redux";
 import { addBill } from "../../features/bills/billsSlice";
+import { validateAddBillForm } from "../../common/validateAddBillForm";
 
 const AddBillForm = () => {
   const dispatch = useDispatch();
 
-  function handleAddBill(event) {
-    event.preventDefault();
+  function handleAddBill(values, { resetForm }) {
     const newBill = {
-      name: event.target.billName.value,
-      amount: event.target.billAmount.value,
-      date: event.target.billDate.value,
+      name: values.billName,
+      amount: values.billAmount,
+      date: values.billDate,
     };
     dispatch(addBill(newBill));
-    event.target.reset();
+    resetForm();
   }
 
   return (
     <Container>
-      <Form
+      <Formik
+        initialValues={{ billName: "", billAmount: "", billDate: "" }}
         onSubmit={handleAddBill}
-        className="border border-black px-2 rounded">
-        <h3>Add new bill</h3>
-        <FormGroup>
-          <Label for="billName">Name</Label>
-          <Input id="billName" name="billName" type="text" />
-        </FormGroup>
-        <FormGroup>
-          <Label for="billAmount">Amount</Label>
-          <Input id="billAmount" name="billAmount" type="number" />
-        </FormGroup>
-        <FormGroup>
-          <Label for="billDate">Day of Month</Label>
-          <Input id="billDate" name="billDate" type="number" min="1" max="31" />
-        </FormGroup>
-        <FormGroup>
-          <Button color="primary">Add</Button>
-        </FormGroup>
-      </Form>
+        validate={validateAddBillForm}>
+        <Form
+          // onSubmit={handleAddBill}
+          className="border border-black px-2 rounded">
+          <h3>Add new bill</h3>
+          <FormGroup>
+            <Label for="billName">Name</Label>
+            <Field
+              id="billName"
+              name="billName"
+              type="text"
+              className="form-control"
+            />
+            <ErrorMessage
+              name="billName"
+              component="div"
+              className="text-danger"
+            />
+          </FormGroup>
+          <FormGroup>
+            <Label for="billAmount">Amount</Label>
+            <Field
+              id="billAmount"
+              name="billAmount"
+              type="number"
+              className="form-control"
+            />
+          </FormGroup>
+          <FormGroup>
+            <Label for="billDate">Day of Month</Label>
+            <Field
+              id="billDate"
+              name="billDate"
+              type="number"
+              min="1"
+              max="31"
+              className="form-control"
+            />
+          </FormGroup>
+          <FormGroup>
+            <Button color="primary">Add</Button>
+          </FormGroup>
+        </Form>
+      </Formik>
     </Container>
   );
 };

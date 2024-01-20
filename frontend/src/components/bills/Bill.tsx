@@ -8,9 +8,9 @@ const Bill = ({ billId }: { billId: string }) => {
   const bill: BillType = useSelector(selectBillById(parseInt(billId)));
 
   return (
-    <Row key={billId} className="border border-black">
+    <Row key={billId} className="border border-black" data-testid={"bill-row"}>
       <Col className="border">
-        <Link to={`/bills/${bill.id}/edit`}>{`${bill.name}(${bill.id})`}</Link>
+        <Link to={`/bills/${bill.id}/edit`}>{bill.name}</Link>
       </Col>
       <Col className="border">${bill.amount}</Col>
       <Col className="border">{bill.date}</Col>
