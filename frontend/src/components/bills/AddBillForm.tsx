@@ -49,6 +49,11 @@ const AddBillForm = () => {
               type="number"
               className="form-control"
             />
+            <ErrorMessage
+              name="billAmount"
+              component="div"
+              className="text-danger"
+            />
           </FormGroup>
           <FormGroup>
             <Label for="billDate">Day of Month</Label>
@@ -59,6 +64,11 @@ const AddBillForm = () => {
               min="1"
               max="31"
               className="form-control"
+            />
+            <ErrorMessage
+              name="billDate"
+              component="div"
+              className="text-danger"
             />
           </FormGroup>
           <FormGroup>
