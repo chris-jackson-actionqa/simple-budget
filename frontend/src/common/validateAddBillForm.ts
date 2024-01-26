@@ -19,6 +19,14 @@ export const validateAddBillForm = (values) => {
 
   if (!values.billDate) {
     errors.billDate = "Required";
+  } else if (isNaN(Number(values.billDate))) {
+    errors.billDate = "Must be a number";
+  } else if (!Number.isInteger(Number(values.billDate))) {
+    errors.billDate = "Must be a whole number";
+  } else if (Number(values.billDate) <= 0 || Number(values.billDate) > 31) {
+    errors.billDate = "Must be between 1 and 31";
+  } else if (!Number.isInteger(Number(values.billDate))) {
+    errors.billDate = "Must be a whole number";
   }
 
   return errors;

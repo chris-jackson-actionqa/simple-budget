@@ -303,4 +303,149 @@ describe("Add New Bill", () => {
       "Number of bills should not change"
     );
   });
+
+  it("can add bill with bill date 1", async () => {
+    browser.updateValue("#billName", "Test Bill");
+    browser.updateValue("#billAmount", "100");
+    browser.updateValue("#billDate", "1");
+
+    const getNumBills = async () => {
+      const billRows = await browser.element.findAll(
+        "[data-testid='bill-row']"
+      );
+
+      return billRows.length;
+    };
+    const numBillsBefore = await getNumBills();
+
+    browser.element.findByText("Add").click();
+
+    browser.assert.deepEqual(
+      await getNumBills(),
+      numBillsBefore + 1,
+      "Number of bills should increase by 1"
+    );
+  });
+
+  it("can add bill with bill date 31", async () => {
+    browser.updateValue("#billName", "Test Bill");
+    browser.updateValue("#billAmount", "100");
+    browser.updateValue("#billDate", "31");
+
+    const getNumBills = async () => {
+      const billRows = await browser.element.findAll(
+        "[data-testid='bill-row']"
+      );
+
+      return billRows.length;
+    };
+    const numBillsBefore = await getNumBills();
+
+    browser.element.findByText("Add").click();
+
+    browser.assert.deepEqual(
+      await getNumBills(),
+      numBillsBefore + 1,
+      "Number of bills should increase by 1"
+    );
+  });
+
+  it("can't add bill with bill date 0", async () => {
+    browser.updateValue("#billName", "Test Bill");
+    browser.updateValue("#billAmount", "100");
+    browser.updateValue("#billDate", "0");
+
+    const getNumBills = async () => {
+      const billRows = await browser.element.findAll(
+        "[data-testid='bill-row']"
+      );
+
+      return billRows.length;
+    };
+    const numBillsBefore = await getNumBills();
+
+    browser.element.findByText("Add").click();
+
+    browser.assert.deepEqual(
+      await getNumBills(),
+      numBillsBefore,
+      "Number of bills should not change"
+    );
+  });
+
+  it("can't add bill with bill date 32", async () => {
+    browser.updateValue("#billName", "Test Bill");
+    browser.updateValue("#billAmount", "100");
+    browser.updateValue("#billDate", "32");
+
+    const getNumBills = async () => {
+      const billRows = await browser.element.findAll(
+        "[data-testid='bill-row']"
+      );
+
+      return billRows.length;
+    };
+    const numBillsBefore = await getNumBills();
+
+    browser.element.findByText("Add").click();
+
+    browser.assert.deepEqual(
+      await getNumBills(),
+      numBillsBefore,
+      "Number of bills should not change"
+    );
+  });
+
+  it("can't add bill with bill date not a number", async () => {
+    browser.updateValue("#billName", "Test Bill");
+    browser.updateValue("#billAmount", "100");
+    browser.updateValue("#billDate", "abc");
+
+    const getNumBills = async () => {
+      const billRows = await browser.element.findAll(
+        "[data-testid='bill-row']"
+      );
+
+      return billRows.length;
+    };
+    const numBillsBefore = await getNumBills();
+
+    browser.element.findByText("Add").click();
+
+    browser.assert.deepEqual(
+      await getNumBills(),
+      numBillsBefore,
+      "Number of bills should not change"
+    );
+  });
+
+  it("can't add bill with bill date not an integer", async () => {
+    browser.updateValue("#billName", "Test Bill");
+    browser.updateValue("#billAmount", "100");
+    browser.updateValue("#billDate", "1.5");
+
+    const getNumBills = async () => {
+      const billRows = await browser.element.findAll(
+        "[data-testid='bill-row']"
+      );
+
+      return billRows.length;
+    };
+    const numBillsBefore = await getNumBills();
+
+    browser.element.findByText("Add").click();
+    browser.assert.deepEqual(
+      await getNumBills(),
+      numBillsBefore,
+      "Number of bills should not change"
+    );
+
+    browser.updateValue("#billDate", "1.0");
+    browser.element.findByText("Add").click();
+    browser.assert.deepEqual(
+      await getNumBills(),
+      numBillsBefore,
+      "Number of bills should not change"
+    );
+  });
 });
