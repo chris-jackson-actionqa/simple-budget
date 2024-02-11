@@ -23,9 +23,7 @@ const AddBillForm = () => {
         initialValues={{ billName: "", billAmount: "", billDate: "" }}
         onSubmit={handleAddBill}
         validate={validateAddBillForm}>
-        <Form
-          // onSubmit={handleAddBill}
-          className="border border-black px-2 rounded">
+        <Form className="border border-black px-2 rounded">
           <h3>Add new bill</h3>
           <FormGroup>
             <Label for="billName">Name</Label>
