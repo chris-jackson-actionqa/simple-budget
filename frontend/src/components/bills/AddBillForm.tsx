@@ -70,7 +70,9 @@ const AddBillForm = () => {
             />
           </FormGroup>
           <FormGroup>
-            <Button color="primary">Add</Button>
+            <Button color="primary" type="submit">
+              Add
+            </Button>
           </FormGroup>
         </Form>
       </Formik>

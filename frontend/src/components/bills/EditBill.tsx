@@ -1,4 +1,4 @@
-import { Container, FormGroup, Label, Input, Button } from "reactstrap";
+import { Container, FormGroup, Label, Button } from "reactstrap";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
@@ -14,13 +14,17 @@ const EditBill = ({ billId }: { billId: string }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const foundBill = useSelector(selectBillById(parseInt(billId)));
-  const [theBill, setBill] = useState({ ...foundBill });
+  const [theBill] = useState({ ...foundBill });
   const [doneEditing, setDoneEditing] = useState(false);
 
-  const handleEditBill = (values) => {
-    // event.preventDefault();
+  const handleEditBill = (values: {
+    billName: string;
+    billAmount: number;
+    billDate: number;
+  }) => {
+    console.log("handleEditBill: billId", billId);
     const updatedBill = {
-      id: billId,
+      id: parseInt(billId),
       name: values.billName,
       amount: values.billAmount,
       date: values.billDate,
@@ -60,9 +64,7 @@ const EditBill = ({ billId }: { billId: string }) => {
         }}
         onSubmit={handleEditBill}
         validate={validateAddBillForm}>
-        <Form
-          // onSubmit={handleEditBill}
-          className="border border-black px-2 rounded">
+        <Form className="border border-black px-2 rounded">
           <FormGroup>
             <Label for="billName">Name</Label>
             <Field

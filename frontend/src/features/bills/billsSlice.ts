@@ -31,6 +31,7 @@ const billsSlice = createSlice({
       const billIndex = billsArray.findIndex(
         (bill) => bill.id === updatedBill.id
       );
+      console.log("billIndex", billIndex);
       billsArray[billIndex] = updatedBill;
     },
   },
