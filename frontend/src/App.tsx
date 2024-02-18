@@ -3,6 +3,7 @@ import { Routes, Route } from "react-router-dom";
 import BillsPage from "./pages/BillsPage";
 import Header from "./components/Header";
 import EditBillPage from "./pages/EditBillPage";
+import IncomePage from "./pages/IncomePage";
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
         <Route path="/" element={<BillsPage />} />
         <Route path="bills" element={<BillsPage />} />
         <Route path="/bills/:billId/edit" element={<EditBillPage />} />
+        <Route path="/income" element={<IncomePage />} />
       </Routes>
     </>
   );
