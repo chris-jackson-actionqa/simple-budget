@@ -3,9 +3,9 @@ describe("Edit Bill", () => {
     browser.navigateTo("/bills");
     browser.refresh();
     // Add new bill
-    browser.updateValue("#billName", "Test Bill");
-    browser.updateValue("#billAmount", "100");
-    browser.updateValue("#billDate", "20");
+    browser.sbUpdateValue("#billName", "Test Bill");
+    browser.sbUpdateValue("#billAmount", "100");
+    browser.sbUpdateValue("#billDate", "20");
     browser.element.findByText("Add").click();
 
     browser.element.findByText("Test Bill").click();
@@ -13,10 +13,9 @@ describe("Edit Bill", () => {
 
   it("should edit bill", async () => {
     // Edit bill
-    await clearValue(browser, "#billName");
-    await updateValue(browser, "#billName", "Test Bill 2");
-    await updateValue(browser, "#billAmount", "200");
-    await updateValue(browser, "#billDate", "25");
+    await browser.sbUpdateValue("#billName", "Test Bill 2");
+    await browser.sbUpdateValue("#billAmount", "200");
+    await browser.sbUpdateValue("#billDate", "25");
     await browser.element.findByText("Save").click();
 
     const billElements = await browser.element.findAll(
@@ -39,10 +38,9 @@ describe("Edit Bill", () => {
 
   it("should cancel edit bill", async () => {
     // Edit bill
-    await clearValue(browser, "#billName");
-    await updateValue(browser, "#billName", "Test Bill 2");
-    await updateValue(browser, "#billAmount", "200");
-    await updateValue(browser, "#billDate", "25");
+    await browser.sbUpdateValue("#billName", "Test Bill 2");
+    await browser.sbUpdateValue("#billAmount", "200");
+    await browser.sbUpdateValue("#billDate", "25");
     await browser.element.findByText("Cancel").click();
 
     const billElements = await browser.element.findAll(
@@ -90,15 +88,3 @@ describe("Edit Bill", () => {
     expect(thisShouldBeUndefined).to.be.undefined;
   });
 });
-
-async function clearValue(browser, selector) {
-  const value = await browser.getValue(selector);
-  for (let i = 0; i < value.length; i++) {
-    await browser.element(selector).sendKeys("\uE003");
-  }
-}
-
-async function updateValue(browser, selector, value) {
-  await clearValue(browser, selector);
-  await browser.updateValue(selector, value);
-}
