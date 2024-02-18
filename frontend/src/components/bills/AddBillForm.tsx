@@ -1,5 +1,5 @@
 import { Formik, Form, Field, ErrorMessage } from "formik";
-import { Container, FormGroup, Label, Input, Button } from "reactstrap";
+import { Container, FormGroup, Label, Button } from "reactstrap";
 import { useDispatch } from "react-redux";
 import { addBill } from "../../features/bills/billsSlice";
 import { validateAddBillForm } from "../../common/validateAddBillForm";
@@ -70,7 +70,9 @@ const AddBillForm = () => {
             />
           </FormGroup>
           <FormGroup>
-            <Button color="primary">Add</Button>
+            <Button color="primary" type="submit">
+              Add
+            </Button>
           </FormGroup>
         </Form>
       </Formik>

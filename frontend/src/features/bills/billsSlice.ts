@@ -27,9 +27,11 @@ const billsSlice = createSlice({
     updateBill: (state, action) => {
       const { billsArray } = state;
       const { payload: updatedBill } = action;
+      console.log("updatedBill", updatedBill);
       const billIndex = billsArray.findIndex(
         (bill) => bill.id === updatedBill.id
       );
+      console.log("billIndex", billIndex);
       billsArray[billIndex] = updatedBill;
     },
   },

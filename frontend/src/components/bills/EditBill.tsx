@@ -1,27 +1,33 @@
-import { Container, Form, FormGroup, Label, Input, Button } from "reactstrap";
+import { Container, FormGroup, Label, Button } from "reactstrap";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { Formik, Form, Field, ErrorMessage } from "formik";
 import {
   selectBillById,
   removeBill,
   updateBill,
 } from "../../features/bills/billsSlice";
+import { validateAddBillForm } from "../../common/validateAddBillForm";
 
 const EditBill = ({ billId }: { billId: string }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const foundBill = useSelector(selectBillById(parseInt(billId)));
-  const [theBill, setBill] = useState({ ...foundBill });
+  const [theBill] = useState({ ...foundBill });
   const [doneEditing, setDoneEditing] = useState(false);
 
-  const handleEditBill = (event) => {
-    event.preventDefault();
+  const handleEditBill = (values: {
+    billName: string;
+    billAmount: number;
+    billDate: number;
+  }) => {
+    console.log("handleEditBill: billId", billId);
     const updatedBill = {
-      id: theBill.id,
-      name: theBill.name,
-      amount: theBill.amount,
-      date: theBill.date,
+      id: parseInt(billId),
+      name: values.billName,
+      amount: values.billAmount,
+      date: values.billDate,
     };
     dispatch(updateBill(updatedBill));
     setDoneEditing(true);
@@ -50,55 +56,70 @@ const EditBill = ({ billId }: { billId: string }) => {
   return (
     <Container className="">
       <h1>Edit {theBill.name}</h1>
-      <Form
+      <Formik
+        initialValues={{
+          billName: theBill.name,
+          billAmount: theBill.amount,
+          billDate: theBill.date,
+        }}
         onSubmit={handleEditBill}
-        className="border border-black px-2 rounded">
-        <FormGroup>
-          <Label for="billName">Name</Label>
-          <Input
-            id="billName"
-            name="billName"
-            type="text"
-            value={theBill.name}
-            onChange={(event) =>
-              setBill({ ...theBill, name: event.target.value })
-            }
-          />
-        </FormGroup>
-        <FormGroup>
-          <Label for="billAmount">Amount</Label>
-          <Input
-            id="billAmount"
-            name="billAmount"
-            type="number"
-            value={theBill.amount}
-            onChange={(event) =>
-              setBill({ ...theBill, amount: event.target.value })
-            }
-          />
-        </FormGroup>
-        <FormGroup>
-          <Label for="billDate">Day of Month</Label>
-          <Input
-            id="billDate"
-            name="billDate"
-            type="number"
-            min="1"
-            max="31"
-            value={theBill.date}
-            onChange={(event) =>
-              setBill({ ...theBill, date: event.target.value })
-            }
-          />
-        </FormGroup>
-        <Button color="secondary" onClick={() => setDoneEditing(true)}>
-          Cancel
-        </Button>
-        <Button color="primary">Save</Button>
-        <Button color="danger" onClick={handleDeleteBill}>
-          Delete
-        </Button>
-      </Form>
+        validate={validateAddBillForm}>
+        <Form className="border border-black px-2 rounded">
+          <FormGroup>
+            <Label for="billName">Name</Label>
+            <Field
+              id="billName"
+              name="billName"
+              type="text"
+              className="form-control"
+            />
+            <ErrorMessage
+              name="billName"
+              component="div"
+              className="text-danger"
+            />
+          </FormGroup>
+          <FormGroup>
+            <Label for="billAmount">Amount</Label>
+            <Field
+              id="billAmount"
+              name="billAmount"
+              type="number"
+              className="form-control"
+            />
+            <ErrorMessage
+              name="billAmount"
+              component="div"
+              className="text-danger"
+            />
+          </FormGroup>
+          <FormGroup>
+            <Label for="billDate">Day of Month</Label>
+            <Field
+              id="billDate"
+              name="billDate"
+              type="number"
+              min="1"
+              max="31"
+              className="form-control"
+            />
+            <ErrorMessage
+              name="billDate"
+              component="div"
+              className="text-danger"
+            />
+          </FormGroup>
+          <Button color="secondary" onClick={() => setDoneEditing(true)}>
+            Cancel
+          </Button>
+          <Button type="submit" color="primary">
+            Save
+          </Button>
+          <Button color="danger" onClick={handleDeleteBill}>
+            Delete
+          </Button>
+        </Form>
+      </Formik>
     </Container>
   );
 };
