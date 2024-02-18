@@ -1,11 +1,33 @@
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { Container, FormGroup, Label, Button } from "reactstrap";
+import { updateIncome, selectIncome } from "../features/income/incomeSlice";
+import { useSelector, useDispatch } from "react-redux";
+import { useState } from "react";
 
 const IncomePage = () => {
+  const income = useSelector(selectIncome);
+  const dispatch = useDispatch();
+  const [theIncome] = useState({ ...income });
+
   return (
     <Container>
       <h1>Income</h1>
-      <Formik>
+      <Formik
+        initialValues={{
+          incomeNumRecurrance: theIncome.numRecurrance,
+          incomeRecurrance: theIncome.recurrance,
+          incomeStartDate: theIncome.startDate,
+        }}
+        onSubmit={(values) => {
+          console.log("values", values);
+          const updatedIncome = {
+            numRecurrance: values.incomeNumRecurrance,
+            recurrance: values.incomeRecurrance,
+            startDate: values.incomeStartDate,
+          };
+
+          dispatch(updateIncome(updatedIncome));
+        }}>
         <Form>
           <FormGroup>
             <Label for="incomeNumRecurrance">I get paid every</Label>
@@ -14,7 +36,6 @@ const IncomePage = () => {
               name="incomeNumRecurrance"
               type="number"
               className="form-control"
-              value={2}
             />
             <ErrorMessage
               name="incomeNumRecurrance"
@@ -22,7 +43,7 @@ const IncomePage = () => {
               className="text-danger"
             />
 
-            <Field name="incomeRecurrance" as="select">
+            <Field name="incomeRecurrance" as="select" className="form-control">
               <option value="weeks">Weeks</option>
             </Field>
           </FormGroup>
