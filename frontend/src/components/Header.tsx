@@ -47,6 +47,11 @@ const Header = () => {
             Bills
           </NavLink>
         </NavItem>
+        <NavItem>
+          <NavLink to="/budget" className="nav-link">
+            Budget
+          </NavLink>
+        </NavItem>
       </Nav>
       {/* </Collapse> */}
     </Navbar>
