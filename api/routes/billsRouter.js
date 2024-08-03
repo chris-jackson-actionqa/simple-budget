@@ -1,6 +1,18 @@
 const express = require("express");
 const billsRouter = express.Router();
 
+const pg = require("pg");
+const { Pool } = pg;
+
+//TODO: abstract credentials
+const pool = new Pool({
+  user: "postgres",
+  password: "root",
+  host: "localhost",
+  port: 5432,
+  database: "simplebudget",
+});
+
 billsRouter
   .route("/")
   .all((req, res, next) => {
@@ -8,10 +20,12 @@ billsRouter
     res.setHeader("Content-Type", "text/plain");
     next();
   })
-  .get((req, res) => {
-    res.end("Will send all the bills to you");
+  .get(async (req, res) => {
+    const result = await pool.query("SELECT * FROM bills");
+    console.log(result.rows);
+    res.json(result.rows);
   })
-  .post((req, res) => {
+  .post(async (req, res) => {
     res.end(`Will add the bill: ${req.body.name}`);
   })
   .put((req, res) => {
