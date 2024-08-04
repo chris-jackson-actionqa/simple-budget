@@ -26,14 +26,24 @@ billsRouter
     res.json(result.rows);
   })
   .post(async (req, res) => {
-    res.end(`Will add the bill: ${req.body.name}`);
+    try {
+      const { bill_name } = req.body;
+      const result = await pool.query(
+        "INSERT INTO bills (bill_name) VALUES ($1) RETURNING *",
+        [bill_name]
+      );
+      res.json(result.rows[0]);
+    } catch (err) {
+      res.status(400).json({ error: err.message });
+    }
   })
   .put((req, res) => {
     res.statusCode = 403;
     res.end("PUT operation not supported on /bills");
   })
-  .delete((req, res) => {
-    res.end("Deleting all bills");
+  .delete(async (req, res) => {
+    const result = await pool.query("DELETE FROM bills");
+    res.end("All bills deleted: " + result.rowCount);
   });
 
 module.exports = billsRouter;

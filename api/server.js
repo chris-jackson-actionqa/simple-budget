@@ -12,7 +12,7 @@ app.use(express.json());
 app.use("/bills", billsRouter);
 
 app.get("/", (req, res) => {
-  res.send("Hello World!");
+  res.send("Welcome to Simple Budget!");
 });
 
 app.listen(PORT, () => {
