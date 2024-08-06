@@ -33,10 +33,11 @@
   - modifier for recurrance. Like, every 2 months would have
     a recurrance of "M" and a recurrance_amount of `2`
   - defaults to `1`
-- starting_date DATE
+- start_date DATE
   - a starting date for recurrance to be calculated from
 - amount NUMBER
   - amount of the expense
+- end_date
 
 ## Balance
 

@@ -13,7 +13,7 @@ const pool = new Pool({
   database: "simplebudget",
 });
 
-const recurrance_types = ["d", "w", "m", "y"];
+const recurrence_types = ["d", "w", "m", "y"];
 
 billsRouter
   .route("/")
@@ -54,9 +54,85 @@ billsRouter
         return;
       }
 
+      // Recurrence amount is the number of days, weeks, months, or years between each bill
+      if (!recurrence_amount) {
+        res.status(400).json({ error: "recurrence amount is required" });
+        return;
+      } else if (recurrence_amount < 1) {
+        res.status(400).json({ error: "recurrence amount must be at least 1" });
+        return;
+      } else if (!Number.isInteger(recurrence_amount)) {
+        res.status(400).json({ error: "recurrence amount must be an integer" });
+        return;
+      } else if (recurrence === "d" && recurrence_amount > 365) {
+        res
+          .status(400)
+          .json({ error: "recurrence amount must be less than 365 for days" });
+        return;
+      } else if (recurrence === "w" && recurrence_amount > 52) {
+        res
+          .status(400)
+          .json({ error: "recurrence amount must be less than 52 for weeks" });
+        return;
+      } else if (recurrence === "m" && recurrence_amount > 12) {
+        res
+          .status(400)
+          .json({ error: "recurrence amount must be less than 12 for months" });
+        return;
+      } else if (recurrence === "y" && recurrence_amount > 100) {
+        res
+          .status(400)
+          .json({ error: "recurrence amount must be less than 100 for years" });
+        return;
+      }
+
+      // Amount is the amount of the bill
+      if (!amount) {
+        res.status(400).json({ error: "amount is required" });
+        return;
+      } else if (amount < 0) {
+        res.status(400).json({ error: "amount must be greater than 0" });
+        return;
+      } else if (amount > 1_000_000_000) {
+        res
+          .status(400)
+          .json({ error: "amount must be less than 1,000,000,000" });
+        return;
+      }
+
+      // Start date is the date the bill starts
+      if (!start_date) {
+        res.status(400).json({ error: "start date is required" });
+        return;
+      } else if (isNaN(Date.parse(start_date))) {
+        res.status(400).json({ error: "invalid start date" });
+        return;
+      }
+
+      // End date is the date the bill ends
+      if (end_date && isNaN(Date.parse(end_date))) {
+        res.status(400).json({ error: "invalid end date" });
+        return;
+      } else if (end_date && Date.parse(end_date) < Date.parse(start_date)) {
+        res
+          .status(400)
+          .json({ error: "end date must be on or after start date" });
+        return;
+      }
+
       const result = await pool.query(
-        "INSERT INTO bills (bill_name) VALUES ($1) RETURNING *",
-        [bill_name]
+        `INSERT INTO bills (
+            bill_name,
+            recurrence,
+            recurrence_amount,
+            amount,
+            start_date,
+            end_date
+         ) VALUES (
+            $1, $2, $3, $4, $5, $6
+         )
+         RETURNING *`,
+        [bill_name, recurrence, recurrence_amount, amount, start_date, end_date]
       );
       res.json(result.rows[0]);
     } catch (err) {
