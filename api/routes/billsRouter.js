@@ -13,7 +13,7 @@ const pool = new Pool({
   database: "simplebudget",
 });
 
-const recurrence_types = ["d", "w", "m", "y"];
+const recurrence_types = ["d", "w", "m", "y", "o"];
 
 billsRouter
   .route("/")
@@ -45,7 +45,7 @@ billsRouter
       }
 
       // Recurrance is a single letter representing the type of recurrence
-      // d - daily, w - weekly, m - monthly, y - yearly
+      // d - daily, w - weekly, m - monthly, y - yearly, o - one time
       if (!recurrence) {
         res.status(400).json({ error: "recurrence is required" });
         return;
@@ -154,9 +154,10 @@ billsRouter
   .get(async (req, res) => {
     try {
       const { billId } = req.params;
-      const result = await pool.query("SELECT * FROM bills WHERE id = $1", [
-        billId,
-      ]);
+      const result = await pool.query(
+        "SELECT * FROM bills WHERE bill_id = $1",
+        [billId]
+      );
       if (result.rows.length === 0) {
         res.status(404).json({ error: "Bill not found" });
       } else {
@@ -169,10 +170,51 @@ billsRouter
   .put(async (req, res) => {
     try {
       const { billId } = req.params;
-      const { bill_name } = req.body;
+
+      // Get existing bill
+      const existingBill = await pool.query(
+        "SELECT * FROM bills WHERE bill_id = $1",
+        [billId]
+      );
+
+      if (existingBill.rows.length === 0) {
+        res.status(404).json({ error: "Bill not found" });
+        return;
+      }
+
+      const existingBillData = existingBill.rows[0];
+
+      // Update bill
+      const {
+        bill_name = existingBillData.bill_name,
+        recurrence = existingBillData.recurrence,
+        recurrence_amount = existingBillData.recurrence_amount,
+        amount = existingBillData.amount,
+        start_date = existingBillData.start_date,
+        end_date = existingBillData.end_date,
+        status = existingBillData.status,
+      } = req.body;
+
       const result = await pool.query(
-        "UPDATE bills SET bill_name = $1 WHERE id = $2 RETURNING *",
-        [bill_name, billId]
+        `UPDATE bills SET
+          bill_name = $1,
+          recurrence = $2,
+          recurrence_amount = $3,
+          amount = $4,
+          start_date = $5,
+          end_date = $6,
+          status = $7
+        WHERE bill_id = $8 RETURNING *`,
+        [
+          bill_name,
+          recurrence,
+          recurrence_amount,
+          amount,
+          start_date,
+          end_date,
+          status,
+          billId,
+        ]
       );
       if (result.rows.length === 0) {
         res.status(404).json({ error: "Bill not found" });
@@ -186,7 +228,7 @@ billsRouter
   .delete(async (req, res) => {
     try {
       const { billId } = req.params;
-      const result = await pool.query("DELETE FROM bills WHERE id = $1", [
+      const result = await pool.query("DELETE FROM bills WHERE bill_id = $1", [
         billId,
       ]);
       if (result.rowCount === 0) {
