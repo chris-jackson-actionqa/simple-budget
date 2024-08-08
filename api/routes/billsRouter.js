@@ -1,7 +1,7 @@
-const express = require("express");
-const billsRouter = express.Router();
+import { Router } from "express";
+const billsRouter = Router();
 
-const pg = require("pg");
+import pg from "pg";
 const { Pool } = pg;
 
 //TODO: abstract credentials
@@ -132,7 +132,14 @@ billsRouter
             $1, $2, $3, $4, $5, $6
          )
          RETURNING *`,
-        [bill_name, recurrence, recurrence_amount, amount, start_date, end_date]
+        [
+          bill_name,
+          recurrence,
+          recurrence_amount,
+          amount,
+          start_date,
+          end_date,
+        ],
       );
       res.json(result.rows[0]);
     } catch (err) {
@@ -156,7 +163,7 @@ billsRouter
       const { billId } = req.params;
       const result = await pool.query(
         "SELECT * FROM bills WHERE bill_id = $1",
-        [billId]
+        [billId],
       );
       if (result.rows.length === 0) {
         res.status(404).json({ error: "Bill not found" });
@@ -174,7 +181,7 @@ billsRouter
       // Get existing bill
       const existingBill = await pool.query(
         "SELECT * FROM bills WHERE bill_id = $1",
-        [billId]
+        [billId],
       );
 
       if (existingBill.rows.length === 0) {
@@ -214,7 +221,7 @@ billsRouter
           end_date,
           status,
           billId,
-        ]
+        ],
       );
       if (result.rows.length === 0) {
         res.status(404).json({ error: "Bill not found" });
@@ -241,4 +248,4 @@ billsRouter
     }
   });
 
-module.exports = billsRouter;
+export default billsRouter;

@@ -1,12 +1,12 @@
-const express = require("express");
-const morgan = require("morgan");
-const billsRouter = require("./routes/billsRouter");
+import express, { json } from "express";
+import morgan from "morgan";
+import billsRouter from "./routes/billsRouter.js";
 
 const PORT = 3100;
 const app = express();
 // app.use(bodyParser.json());
 app.use(morgan("dev"));
-app.use(express.json());
+app.use(json());
 
 // Bills router
 app.use("/bills", billsRouter);
