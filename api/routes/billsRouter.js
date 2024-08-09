@@ -1,8 +1,8 @@
-import { Router } from "express";
-const billsRouter = Router();
+import { Router } from "express"
+const billsRouter = Router()
 
-import pg from "pg";
-const { Pool } = pg;
+import pg from "pg"
+const { Pool } = pg
 
 //TODO: abstract credentials
 const pool = new Pool({
@@ -11,21 +11,21 @@ const pool = new Pool({
   host: "localhost",
   port: 5432,
   database: "simplebudget",
-});
+})
 
-const recurrence_types = ["d", "w", "m", "y", "o"];
+const recurrence_types = ["d", "w", "m", "y", "o"]
 
 billsRouter
   .route("/")
   .all((req, res, next) => {
-    res.statusCode = 200;
-    res.setHeader("Content-Type", "text/plain");
-    next();
+    res.statusCode = 200
+    res.setHeader("Content-Type", "text/plain")
+    next()
   })
   .get(async (req, res) => {
-    const result = await pool.query("SELECT bill_id FROM bills");
-    console.log(result.rows);
-    res.json(result.rows);
+    const result = await pool.query("SELECT bill_id FROM bills")
+    console.log(result.rows)
+    res.json(result.rows)
   })
   .post(async (req, res) => {
     try {
@@ -36,88 +36,88 @@ billsRouter
         amount,
         start_date,
         end_date,
-      } = req.body;
+      } = req.body
 
       // Bill name
       if (!bill_name) {
-        res.status(400).json({ error: "bill name is required" });
-        return;
+        res.status(400).json({ error: "bill name is required" })
+        return
       }
 
       // Recurrance is a single letter representing the type of recurrence
       // d - daily, w - weekly, m - monthly, y - yearly, o - one time
       if (!recurrence) {
-        res.status(400).json({ error: "recurrence is required" });
-        return;
+        res.status(400).json({ error: "recurrence is required" })
+        return
       } else if (recurrence_types.indexOf(recurrence.toLowerCase()) === -1) {
-        res.status(400).json({ error: "invalid recurrence type" });
-        return;
+        res.status(400).json({ error: "invalid recurrence type" })
+        return
       }
 
       // Recurrence amount is the number of days, weeks, months, or years between each bill
       if (!recurrence_amount) {
-        res.status(400).json({ error: "recurrence amount is required" });
-        return;
+        res.status(400).json({ error: "recurrence amount is required" })
+        return
       } else if (recurrence_amount < 1) {
-        res.status(400).json({ error: "recurrence amount must be at least 1" });
-        return;
+        res.status(400).json({ error: "recurrence amount must be at least 1" })
+        return
       } else if (!Number.isInteger(recurrence_amount)) {
-        res.status(400).json({ error: "recurrence amount must be an integer" });
-        return;
+        res.status(400).json({ error: "recurrence amount must be an integer" })
+        return
       } else if (recurrence === "d" && recurrence_amount > 365) {
         res
           .status(400)
-          .json({ error: "recurrence amount must be less than 365 for days" });
-        return;
+          .json({ error: "recurrence amount must be less than 365 for days" })
+        return
       } else if (recurrence === "w" && recurrence_amount > 52) {
         res
           .status(400)
-          .json({ error: "recurrence amount must be less than 52 for weeks" });
-        return;
+          .json({ error: "recurrence amount must be less than 52 for weeks" })
+        return
       } else if (recurrence === "m" && recurrence_amount > 12) {
         res
           .status(400)
-          .json({ error: "recurrence amount must be less than 12 for months" });
-        return;
+          .json({ error: "recurrence amount must be less than 12 for months" })
+        return
       } else if (recurrence === "y" && recurrence_amount > 100) {
         res
           .status(400)
-          .json({ error: "recurrence amount must be less than 100 for years" });
-        return;
+          .json({ error: "recurrence amount must be less than 100 for years" })
+        return
       }
 
       // Amount is the amount of the bill
       if (!amount) {
-        res.status(400).json({ error: "amount is required" });
-        return;
+        res.status(400).json({ error: "amount is required" })
+        return
       } else if (amount < 0) {
-        res.status(400).json({ error: "amount must be greater than 0" });
-        return;
+        res.status(400).json({ error: "amount must be greater than 0" })
+        return
       } else if (amount > 1_000_000_000) {
         res
           .status(400)
-          .json({ error: "amount must be less than 1,000,000,000" });
-        return;
+          .json({ error: "amount must be less than 1,000,000,000" })
+        return
       }
 
       // Start date is the date the bill starts
       if (!start_date) {
-        res.status(400).json({ error: "start date is required" });
-        return;
+        res.status(400).json({ error: "start date is required" })
+        return
       } else if (isNaN(Date.parse(start_date))) {
-        res.status(400).json({ error: "invalid start date" });
-        return;
+        res.status(400).json({ error: "invalid start date" })
+        return
       }
 
       // End date is the date the bill ends
       if (end_date && isNaN(Date.parse(end_date))) {
-        res.status(400).json({ error: "invalid end date" });
-        return;
+        res.status(400).json({ error: "invalid end date" })
+        return
       } else if (end_date && Date.parse(end_date) < Date.parse(start_date)) {
         res
           .status(400)
-          .json({ error: "end date must be on or after start date" });
-        return;
+          .json({ error: "end date must be on or after start date" })
+        return
       }
 
       const result = await pool.query(
@@ -140,56 +140,56 @@ billsRouter
           start_date,
           end_date,
         ],
-      );
-      res.json(result.rows[0]);
+      )
+      res.json(result.rows[0])
     } catch (err) {
-      res.status(400).json({ error: err.message });
+      res.status(400).json({ error: err.message })
     }
   })
   .put((req, res) => {
-    res.statusCode = 403;
-    res.end("PUT operation not supported on /bills");
+    res.statusCode = 403
+    res.end("PUT operation not supported on /bills")
   })
   .delete(async (req, res) => {
-    const result = await pool.query("DELETE FROM bills");
-    res.end("All bills deleted: " + result.rowCount);
-  });
+    const result = await pool.query("DELETE FROM bills")
+    res.end("All bills deleted: " + result.rowCount)
+  })
 
 // Route with parameter :billId
 billsRouter
   .route("/:billId")
   .get(async (req, res) => {
     try {
-      const { billId } = req.params;
+      const { billId } = req.params
       const result = await pool.query(
         "SELECT * FROM bills WHERE bill_id = $1",
         [billId],
-      );
+      )
       if (result.rows.length === 0) {
-        res.status(404).json({ error: "Bill not found" });
+        res.status(404).json({ error: "Bill not found" })
       } else {
-        res.json(result.rows[0]);
+        res.json(result.rows[0])
       }
     } catch (err) {
-      res.status(400).json({ error: err.message });
+      res.status(400).json({ error: err.message })
     }
   })
   .put(async (req, res) => {
     try {
-      const { billId } = req.params;
+      const { billId } = req.params
 
       // Get existing bill
       const existingBill = await pool.query(
         "SELECT * FROM bills WHERE bill_id = $1",
         [billId],
-      );
+      )
 
       if (existingBill.rows.length === 0) {
-        res.status(404).json({ error: "Bill not found" });
-        return;
+        res.status(404).json({ error: "Bill not found" })
+        return
       }
 
-      const existingBillData = existingBill.rows[0];
+      const existingBillData = existingBill.rows[0]
 
       // Update bill
       const {
@@ -200,7 +200,7 @@ billsRouter
         start_date = existingBillData.start_date,
         end_date = existingBillData.end_date,
         status = existingBillData.status,
-      } = req.body;
+      } = req.body
 
       const result = await pool.query(
         `UPDATE bills SET
@@ -222,30 +222,30 @@ billsRouter
           status,
           billId,
         ],
-      );
+      )
       if (result.rows.length === 0) {
-        res.status(404).json({ error: "Bill not found" });
+        res.status(404).json({ error: "Bill not found" })
       } else {
-        res.json(result.rows[0]);
+        res.json(result.rows[0])
       }
     } catch (err) {
-      res.status(400).json({ error: err.message });
+      res.status(400).json({ error: err.message })
     }
   })
   .delete(async (req, res) => {
     try {
-      const { billId } = req.params;
+      const { billId } = req.params
       const result = await pool.query("DELETE FROM bills WHERE bill_id = $1", [
         billId,
-      ]);
+      ])
       if (result.rowCount === 0) {
-        res.status(404).json({ error: "Bill not found" });
+        res.status(404).json({ error: "Bill not found" })
       } else {
-        res.end("Bill deleted: " + result.rowCount);
+        res.end("Bill deleted: " + result.rowCount)
       }
     } catch (err) {
-      res.status(400).json({ error: err.message });
+      res.status(400).json({ error: err.message })
     }
-  });
+  })
 
-export default billsRouter;
+export default billsRouter
