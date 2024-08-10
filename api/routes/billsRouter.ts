@@ -49,7 +49,7 @@ billsRouter
       if (!recurrence) {
         res.status(400).json({ error: "recurrence is required" })
         return
-      } else if (recurrence_types.indexOf(recurrence.toLowerCase()) === -1) {
+      } else if (!recurrence_types.includes(recurrence.toLowerCase())) {
         res.status(400).json({ error: "invalid recurrence type" })
         return
       }

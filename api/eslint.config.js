@@ -1,10 +1,20 @@
-import globals from "globals"
-import pluginJs from "@eslint/js"
-import eslintConfigPrettier from "eslint-config-prettier"
+// @ts-check
 
-export default [
-  { languageOptions: { globals: globals.browser } },
-  pluginJs.configs.recommended,
-  { ignores: ["**/node_modules/**", "coverage"] },
-  eslintConfigPrettier,
-]
+import eslint from "@eslint/js"
+import tseslint from "typescript-eslint"
+
+export default tseslint.config(
+  eslint.configs.recommended,
+  ...tseslint.configs.strictTypeChecked,
+  ...tseslint.configs.stylisticTypeChecked,
+  ...tseslint.configs.recommendedTypeChecked,
+  {
+    languageOptions: {
+      parserOptions: {
+        projectService: true,
+        tsconfigRootDir: import.meta.dirname,
+      },
+    },
+    ignores: ["coverage", "dist", "node_modules"],
+  },
+)
